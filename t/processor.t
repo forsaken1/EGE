@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 188;
+use Test::More tests => 190;
 
 use lib '..';
 use EGE::Asm::Processor;
@@ -382,4 +382,7 @@ sub check_stack {
 	is proc->get_val('ax'), 3048, 'mul with negative sign: mul + -';
 	proc->run_code([ ['mov', 'al', -12], ['mov', 'bl', -2], ['mul', 'bl'] ]);
 	is proc->get_val('ax'), 61976, 'mul with negative sign: mul - -';
+	proc->run_code([ ['mov', 'ax', 134], ['mov', 'bl', 111], ['div', 'bl'] ]);
+	is proc->get_val('al'), 1, 'div';
+	is proc->get_val('ah'), 23, 'div mod';
 }
