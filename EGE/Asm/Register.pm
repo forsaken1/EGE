@@ -110,6 +110,24 @@ sub adc {
 	$self->add($eflags, $reg, $val, 1);
 }
 
+sub mul {
+	my ($self, $eflags, $reg, $val, $proc) = @_;
+	my $eax = $proc->get_register('eax');
+	my $size = $eax->{id_to} - $eax->{id_from};
+	my ($first, $result) = (0, 0);
+	my $second = $self->get_value($reg);
+	
+	if($size == 8) {
+		$first = $eax->get_value('al');
+		$result = abs($first * $second);
+		$eax->mov($eflags, 'ax', $result);
+	}
+	$eflags->{CF} = 0;
+	$eflags->{OF} = 0;
+	$eflags->{CF} = 1, $eflags->{OF} = 1 if $result >= 2**($size);
+	$self;
+}
+
 sub sub {
     my ($self, $eflags, $reg, $val, $use_cf) = @_;
     $self->set_indexes($reg) if $reg;
