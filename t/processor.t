@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 200;
+use Test::More tests => 201;
 
 use lib '..';
 use EGE::Asm::Processor;
@@ -402,4 +402,6 @@ sub check_stack {
 	is proc->get_val('ah'), 229, 'idiv mod';
 	proc->run_code([ ['mov', 'eax', 1], ['dec', 'eax'] ]);
 	is proc->get_val('eax'), 0, 'dec';
+	proc->run_code([ ['mov', 'eax', 1], ['inc', 'eax'] ]);
+	is proc->get_val('eax'), 2, 'inc';
 }
