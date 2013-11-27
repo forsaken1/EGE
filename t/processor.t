@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 197;
+use Test::More tests => 199;
 
 use lib '..';
 use EGE::Asm::Processor;
@@ -397,4 +397,7 @@ sub check_stack {
 	is proc->get_val('ax'), 65512, 'imul with negative sign + -';
 	proc->run_code([ ['mov', 'al', -12], ['mov', 'bl', -2], ['imul', 'bl'] ]);
 	is proc->get_val('ax'), 24, 'imul with negative sign - -';
+	proc->run_code([ ['mov', 'ax', -127], ['mov', 'bl', 50], ['idiv', 'bl'] ]);
+	is proc->get_val('al'), 254, 'idiv';
+	is proc->get_val('ah'), 229, 'idiv mod';
 }
