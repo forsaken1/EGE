@@ -127,6 +127,30 @@ sub div {
 	$self;
 }
 
+sub imul {
+	my ($self, $eflags, $reg, $val, $proc) = @_;
+	my $eax = $proc->get_register('eax');
+	my $size = $self->{id_to} - $self->{id_from};
+	my ($first, $result) = (0, 0);
+	my $second = $self->get_value($reg);
+	
+	if($size == 8) {
+		my ($first_sign_flag, $second_sign_flag) = ($eax->{bits}->{v}[24], $self->{bits}->{v}[24]);
+		my $first_sign  = $first_sign_flag  ? -1 : 1;
+		my $second_sign = $second_sign_flag ? -1 : 1;
+		
+		$first = $eax->get_value('al');
+		$first = 2**$size - $first if $first_sign_flag;
+		$second = 2**$size - $second if $second_sign_flag;
+		$result = $first_sign * $first * $second_sign * $second;
+		$eax->mov($eflags, 'ax', $result);
+	}
+	$eflags->{CF} = 0;
+	$eflags->{OF} = 0;
+	$eflags->{CF} = 1, $eflags->{OF} = 1 if $result >= 2**($size);
+	$self;
+}
+
 sub mul {
 	my ($self, $eflags, $reg, $val, $proc) = @_;
 	my $eax = $proc->get_register('eax');
