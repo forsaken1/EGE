@@ -113,7 +113,7 @@ sub adc {
 sub mul {
 	my ($self, $eflags, $reg, $val, $proc) = @_;
 	my $eax = $proc->get_register('eax');
-	my $size = $eax->{id_to} - $eax->{id_from};
+	my $size = $self->{id_to} - $self->{id_from};
 	my ($first, $result) = (0, 0);
 	my $second = $self->get_value($reg);
 	
