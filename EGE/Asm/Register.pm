@@ -110,6 +110,13 @@ sub adc {
 	$self->add($eflags, $reg, $val, 1);
 }
 
+sub dec {
+	my ($self, $eflags, $reg, $val, $proc) = @_;
+	my $operand = $self->get_value($reg);
+	$self->mov($eflags, $reg, --$operand);
+	$self;
+}
+
 sub div {
 	my ($self, $eflags, $reg, $val, $proc) = @_;
 	my $eax = $proc->get_register('eax');
