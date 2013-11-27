@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 181;
+use Test::More tests => 188;
 
 use lib '..';
 use EGE::Asm::Processor;
@@ -367,4 +367,19 @@ sub check_stack {
     proc->run_code([ ['mov', 'al', 1], ['push', 'al'], ['mov', 'al', 2], ['push', 'al'], ['pop', 'bl'] ]);
     is proc->get_val('ebx'), 2, 'double push pop';
     ok check_stack(1), 'double push pop stack';
+}
+
+{
+	proc->run_code([ ['mov', 'al', 15], ['mov', 'bl', 9], ['mul', 'bl'] ]);
+	is proc->get_val('ax'), 135, 'mul 1';
+	is proc->{eflags}->flags_text, '', 'mul do not set CF, OF flags';
+	proc->run_code([ ['mov', 'al', 255], ['mov', 'bl', 2], ['mul', 'bl'] ]);
+	is proc->get_val('ax'), 510, 'mul 2';
+	is proc->{eflags}->flags_text, 'CF OF', 'mul set CF, OF flags';
+	proc->run_code([ ['mov', 'al', -12], ['mov', 'bl', 2], ['mul', 'bl'] ]);
+	is proc->get_val('ax'), 488, 'mul with negative sign: mul - +';
+	proc->run_code([ ['mov', 'al', 12], ['mov', 'bl', -2], ['mul', 'bl'] ]);
+	is proc->get_val('ax'), 3048, 'mul with negative sign: mul + -';
+	proc->run_code([ ['mov', 'al', -12], ['mov', 'bl', -2], ['mul', 'bl'] ]);
+	is proc->get_val('ax'), 61976, 'mul with negative sign: mul - -';
 }
