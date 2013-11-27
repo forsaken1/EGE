@@ -157,6 +157,13 @@ sub idiv {
 	$self;
 }
 
+sub inc {
+	my ($self, $eflags, $reg, $val, $proc) = @_;
+	my $operand = $self->get_value($reg);
+	$self->mov($eflags, $reg, ++$operand);
+	$self;
+}
+
 sub imul {
 	my ($self, $eflags, $reg, $val, $proc) = @_;
 	my $eax = $proc->get_register('eax');
