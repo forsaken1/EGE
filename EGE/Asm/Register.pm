@@ -113,8 +113,7 @@ sub adc {
 sub dec {
 	my ($self, $eflags, $reg, $val, $proc) = @_;
 	my $operand = $self->get_value($reg);
-	$self->mov($eflags, $reg, --$operand);
-	$self;
+	$self->sub($eflags, $reg, 1);
 }
 
 sub div {
@@ -160,8 +159,7 @@ sub idiv {
 sub inc {
 	my ($self, $eflags, $reg, $val, $proc) = @_;
 	my $operand = $self->get_value($reg);
-	$self->mov($eflags, $reg, ++$operand);
-	$self;
+	$self->add($eflags, $reg, 1);
 }
 
 sub imul {
