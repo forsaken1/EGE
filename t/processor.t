@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 207;
+use Test::More tests => 209;
 
 use lib '..';
 use EGE::Asm::Processor;
@@ -382,9 +382,14 @@ sub check_stack {
 	is proc->get_val('ax'), 3048, 'mul with negative sign: mul + -';
 	proc->run_code([ ['mov', 'al', -12], ['mov', 'bl', -2], ['mul', 'bl'] ]);
 	is proc->get_val('ax'), 61976, 'mul with negative sign: mul - -';
+	
 	proc->run_code([ ['mov', 'ax', 134], ['mov', 'bl', 111], ['div', 'bl'] ]);
 	is proc->get_val('al'), 1, 'div';
 	is proc->get_val('ah'), 23, 'div mod';
+	proc->run_code([ ['mov', 'ax', 134], ['mov', 'bl', -111], ['div', 'bl'] ]);
+	is proc->get_val('al'), 0, 'div with negative sign + -';
+	is proc->get_val('ah'), 134, 'div mod with negative sign + -';
+	
 	proc->run_code([ ['mov', 'al', 12], ['mov', 'bl', 2], ['imul', 'bl'] ]);
 	is proc->get_val('ax'), 24, 'imul 1';
 	is proc->{eflags}->flags_text, '', 'imul do not set CF, OF flags';
@@ -397,6 +402,7 @@ sub check_stack {
 	is proc->get_val('ax'), 65512, 'imul with negative sign + -';
 	proc->run_code([ ['mov', 'al', -12], ['mov', 'bl', -2], ['imul', 'bl'] ]);
 	is proc->get_val('ax'), 24, 'imul with negative sign - -';
+	
 	proc->run_code([ ['mov', 'ax', 127], ['mov', 'bl', 50], ['idiv', 'bl'] ]);
 	is proc->get_val('al'), 2, 'idiv';
 	is proc->get_val('ah'), 27, 'idiv mod';
@@ -409,6 +415,7 @@ sub check_stack {
 	proc->run_code([ ['mov', 'ax', -127], ['mov', 'bl', -50], ['idiv', 'bl'] ]);
 	is proc->get_val('al'), 2, 'idiv with negative sign - -';
 	is proc->get_val('ah'), 229, 'idiv mod with negative sign - -';
+	
 	proc->run_code([ ['mov', 'eax', 1], ['dec', 'eax'] ]);
 	is proc->get_val('eax'), 0, 'dec';
 	proc->run_code([ ['mov', 'eax', 1], ['inc', 'eax'] ]);
