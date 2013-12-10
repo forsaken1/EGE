@@ -136,19 +136,21 @@ sub div {
 sub idiv {
 	my ($self, $eflags, $reg, $val, $proc) = @_;
 	my $eax = $proc->get_register('eax');
-	my $size = $self->{id_to} - $self->{id_from};
+	my $size_first = $eax->{id_to} - $eax->{id_from};
+	my $size_second = $self->{id_to} - $self->{id_from};
 	my ($first, $result) = (0, 0);
 	my $second = $self->get_value($reg);
 	
-	if($size == 8) {
-		my ($first_sign_flag, $second_sign_flag) = ($eax->{bits}->{v}[24], $self->{bits}->{v}[24]);
+	if($size_second == 8) {
+		my ($first_sign_flag, $second_sign_flag) 
+		 = ($eax->{bits}->{v}[$eax->{id_from}], $self->{bits}->{v}[$self->{id_from}]);
 		my $first_sign  = $first_sign_flag  ? -1 : 1;
 		my $second_sign = $second_sign_flag ? -1 : 1;
 		
 		$first = $eax->get_value('ax');
-		$first = 2**($size + 8) - $first if $first_sign_flag;
-		$second = 2**($size + 8) - $second if $second_sign_flag;
-		$result = int(($first_sign * $first) / ($second_sign * $second));
+		$first = 2**($size_first) - $first if $first_sign_flag;
+		$second = 2**($size_second) - $second if $second_sign_flag;
+		$result = int( ($first_sign * $first) / ($second_sign * $second) );
 		my $result_mod = $first_sign * ($first % $second);
 		$eax->mov($eflags, 'al', $result);
 		$eax->mov($eflags, 'ah', $result_mod);
