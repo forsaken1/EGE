@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 201;
+use Test::More tests => 207;
 
 use lib '..';
 use EGE::Asm::Processor;
@@ -397,9 +397,18 @@ sub check_stack {
 	is proc->get_val('ax'), 65512, 'imul with negative sign + -';
 	proc->run_code([ ['mov', 'al', -12], ['mov', 'bl', -2], ['imul', 'bl'] ]);
 	is proc->get_val('ax'), 24, 'imul with negative sign - -';
+	proc->run_code([ ['mov', 'ax', 127], ['mov', 'bl', 50], ['idiv', 'bl'] ]);
+	is proc->get_val('al'), 2, 'idiv';
+	is proc->get_val('ah'), 27, 'idiv mod';
 	proc->run_code([ ['mov', 'ax', -127], ['mov', 'bl', 50], ['idiv', 'bl'] ]);
-	is proc->get_val('al'), 254, 'idiv';
-	is proc->get_val('ah'), 229, 'idiv mod';
+	is proc->get_val('al'), 254, 'idiv with negative sign - +';
+	is proc->get_val('ah'), 229, 'idiv mod with negative sign - +';
+	proc->run_code([ ['mov', 'ax', 127], ['mov', 'bl', -50], ['idiv', 'bl'] ]);
+	is proc->get_val('al'), 254, 'idiv with negative sign + -';
+	is proc->get_val('ah'), 27, 'idiv mod with negative sign + -';
+	proc->run_code([ ['mov', 'ax', -127], ['mov', 'bl', -50], ['idiv', 'bl'] ]);
+	is proc->get_val('al'), 2, 'idiv with negative sign - -';
+	is proc->get_val('ah'), 229, 'idiv mod with negative sign - -';
 	proc->run_code([ ['mov', 'eax', 1], ['dec', 'eax'] ]);
 	is proc->get_val('eax'), 0, 'dec';
 	proc->run_code([ ['mov', 'eax', 1], ['inc', 'eax'] ]);
