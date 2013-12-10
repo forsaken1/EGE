@@ -172,7 +172,8 @@ sub imul {
 	my $second = $self->get_value($reg);
 	
 	if($size == 8) {
-		my ($first_sign_flag, $second_sign_flag) = ($eax->{bits}->{v}[24], $self->{bits}->{v}[24]);
+		my ($first_sign_flag, $second_sign_flag) 
+		 = ($eax->{bits}->{v}[$eax->{id_from}], $self->{bits}->{v}[$self->{id_from}]);
 		my $first_sign  = $first_sign_flag  ? -1 : 1;
 		my $second_sign = $second_sign_flag ? -1 : 1;
 		
