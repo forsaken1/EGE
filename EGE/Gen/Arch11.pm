@@ -12,6 +12,21 @@ use EGE::Random;
 use EGE::Asm::Processor;
 use EGE::Asm::AsmCodeGenerate;
 
+sub offs_modulo {
+    my ($val, @offs) = @_;
+    map { ($val + $_) } @offs;
+}
+
+sub make_wrongs {
+    my ($reg, $upto, @variants) = @_;
+    my @wrongs;
+    for (my $i = 0; @variants + @wrongs < $upto && $i < 100; ++$i) {
+        my $res = proc->get_wrong_val($reg);
+        push @wrongs, $res unless grep { $res eq $_ } @variants, @wrongs;
+    }
+    @wrongs;
+}
+
 sub reg_value_mul_imul {
 	my $self = shift;
 	my ($reg, $format) = $self->generate_simple_code('mul');
@@ -116,21 +131,6 @@ sub get_result_register {
 	elsif($type =~ /div/) {
 		rnd->pick('ah', 'al');
 	}
-}
-
-sub offs_modulo {
-    my ($val, @offs) = @_;
-    map { ($val + $_) } @offs;
-}
-
-sub make_wrongs {
-    my ($reg, $upto, @variants) = @_;
-    my @wrongs;
-    for (my $i = 0; @variants + @wrongs < $upto && $i < 100; ++$i) {
-        my $res = proc->get_wrong_val($reg);
-        push @wrongs, $res unless grep { $res eq $_ } @variants, @wrongs;
-    }
-    @wrongs;
 }
 
 1;
