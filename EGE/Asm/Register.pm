@@ -147,8 +147,8 @@ sub idiv {
         my $second_sign = $second_sign_flag ? -1 : 1;
         
         $first = $eax->get_value('ax');
-        $first = 2**($size_first) - $first if $first_sign_flag;
-        $second = 2**($size_second) - $second if $second_sign_flag;
+        $first = 2**$size_first - $first if $first_sign_flag && $first != 0;
+        $second = 2**$size_second - $second if $second_sign_flag && $second != 0;
         $result = int( ($first_sign * $first) / ($second_sign * $second) );
         my $result_mod = $first_sign * ($first % $second);
         $eax->mov($eflags, 'al', $result);
@@ -176,8 +176,8 @@ sub imul {
         my $second_sign = $second_sign_flag ? -1 : 1;
         
         $first = $eax->get_value('al');
-        $first = 2**$size - $first if $first_sign_flag;
-        $second = 2**$size - $second if $second_sign_flag;
+        $first = 2**$size - $first if $first_sign_flag && $first != 0;
+        $second = 2**$size - $second if $second_sign_flag && $second != 0;
         $result = $first_sign * $first * $second_sign * $second;
         $eax->mov($eflags, 'ax', $result);
     }
