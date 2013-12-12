@@ -111,8 +111,7 @@ sub adc {
 }
 
 sub dec {
-    my ($self, $eflags, $reg, $val, $proc) = @_;
-    my $operand = $self->get_value($reg);
+    my ($self, $eflags, $reg) = @_;
     $self->sub($eflags, $reg, 1);
 }
 
@@ -159,8 +158,7 @@ sub idiv {
 }
 
 sub inc {
-    my ($self, $eflags, $reg, $val, $proc) = @_;
-    my $operand = $self->get_value($reg);
+    my ($self, $eflags, $reg) = @_;
     $self->add($eflags, $reg, 1);
 }
 
