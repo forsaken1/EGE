@@ -203,6 +203,8 @@ g1('Arch09', 'zero_fill');
 g1('Arch09', 'stack');
 g1('Arch10', 'jcc_check_flags');
 g1('Arch10', 'cmovcc');
+g1('Arch11', 'reg_value_mul_imul');
+g1('Arch11', 'reg_value_div_idiv');
 g1('Arch12', 'cond_max_min');
 g1('Arch12', 'divisible_by_mask');
 
