@@ -63,7 +63,7 @@ sub run_cmd {
     $arg //= 'cl' if shift_commands->{$cmd};
     my $val = $self->is_stack_command($cmd) ? $self->{stack} : $self->get_val($arg);
     no strict 'refs';
-	$reg ? $self->get_register($reg)->$cmd($self->{eflags}, $reg, $val, $self) : $self->$cmd;
+    $reg ? $self->get_register($reg)->$cmd($self->{eflags}, $reg, $val, $self) : $self->$cmd;
     $self;
 }
 
